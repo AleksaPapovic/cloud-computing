@@ -1,0 +1,6 @@
+@BibliotekaEkspozitura_HostAddress = http://localhost:5286
+
+GET {{BibliotekaEkspozitura_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
