@@ -1,0 +1,122 @@
+version: "3.7"
+
+services:
+  cndb:
+    container_name: "cndb"
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: bibliotekacn123
+    networks:
+      - biblioteka-network
+
+  nsdb:
+    container_name: "nsdb"
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: bibliotekans123
+    networks:
+      - biblioteka-network
+
+  bgdb:
+    container_name: "bgdb"
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: bibliotekabg123
+    networks:
+      - biblioteka-network
+
+  nidb:
+    container_name: "nidb"
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: bibliotekani123
+    networks:
+      - biblioteka-network
+
+  biblioteka_cn:
+    container_name: "biblioteka_cn"
+    image: "centralna"
+    build:
+      context: .
+      dockerfile: BibliotekaCentralna/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+    ports:
+      - "9000:8080"
+      - "9001:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    depends_on:
+      - "cndb"
+    networks:
+      - biblioteka-network
+
+  biblioteka_ns:
+    container_name: "biblioteka_ns"
+    image: "ekspozituranovisad"
+    build:
+      context: .
+      dockerfile: BibliotekaEkspozitura/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+    ports:
+      - "9010:8080"
+      - "9011:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    depends_on:
+      - "nsdb"
+    networks:
+      - biblioteka-network
+
+  biblioteka_bg:
+    container_name: "biblioteka_bg"
+    image: "ekspoziturabg"
+    build:
+      context: .
+      dockerfile: BibliotekaEkspozitura/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+    ports:
+      - "9020:8080"
+      - "9021:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    depends_on:
+      - "bgdb"
+    networks:
+      - biblioteka-network
+
+  biblioteka_ni:
+    container_name: "biblioteka_ni"
+    image: "ekspozituranis"
+    build:
+      context: .
+      dockerfile: BibliotekaEkspozitura/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+    ports:
+      - "9030:8080"
+      - "9031:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    depends_on:
+      - "nidb"
+    networks:
+      - biblioteka-network
+
+networks:
+  biblioteka-network:
+    driver: bridge
