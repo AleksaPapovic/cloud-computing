@@ -18,7 +18,7 @@ namespace BibliotekaCentralna.Repository
         public async Task<Member> GetByJMBG(string jmbg)
         {
             //throw new NotImplementedException();
-            return new Member();
+            return new Member() { Id=1,FirstName="test", LastName="test",Address = "test", JMBG="test"};
         }
     }
 }

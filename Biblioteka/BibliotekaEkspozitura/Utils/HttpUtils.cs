@@ -14,11 +14,16 @@ namespace BibliotekaEkspozitura.Utils
             return new StringContent(json, System.Text.Encoding.UTF8, "application/json");
         }
 
-        public static async Task<S> HttpClientResponse<S>(HttpResponseMessage response)
+        public static async Task<S> HttpClientResponse<S>(HttpResponseMessage? response) where S : new()
         {
-            string result = await response.Content.ReadAsStringAsync();
-
-            return System.Text.Json.JsonSerializer.Deserialize<S>(result, SerializerOptions);
+            string? result = null;
+            if (response != null)
+            {
+                result = await response.Content?.ReadAsStringAsync();
+                Console.Write("res "+result.ToString());
+                return System.Text.Json.JsonSerializer.Deserialize<S>(result.ToString() ?? "", SerializerOptions)?? new S();
+            }
+            return new S();
         }
     }
 }

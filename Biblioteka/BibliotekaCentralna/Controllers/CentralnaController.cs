@@ -1,11 +1,12 @@
 ﻿using BibliotekaCentralna.Dto;
 using BibliotekaCentralna.Service;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace BibliotekaCentralna.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/v1")]
     public class CentralnaController : ControllerBase
     {
         private readonly IMemberService _memberService;
@@ -20,6 +21,8 @@ namespace BibliotekaCentralna.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<MemberDto?>> RegisterMember(RegisterMemberDto registerMember)
         {
+            Console.WriteLine("writeline centar");
+            Console.WriteLine("writeline centar"+ registerMember.Firstname);
             return Ok(await _memberService.RegisterMember(registerMember));
         }
 

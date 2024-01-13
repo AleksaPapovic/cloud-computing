@@ -1,13 +1,16 @@
 using BibliotekaCentralna.Domain;
 using BibliotekaCentralna.Repository;
 using BibliotekaCentralna.Service;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<CentralnaDbContext>(options =>
+builder.Services.AddLogging(builder =>
 {
+    builder.AddConsole();
 });
-
+builder.Services.AddDbContext<CentralnaDbContext>(options =>
+          options.UseNpgsql(builder.Configuration.GetConnectionString("cndb")));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
@@ -29,7 +32,13 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<CentralnaDbContext>();
+    context.Database.Migrate();
+}
 
 app.Run();

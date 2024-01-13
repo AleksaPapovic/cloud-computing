@@ -2,13 +2,19 @@ using BibliotekaEkspozitora.Domain;
 using BibliotekaEkspozitura.Http;
 using BibliotekaEkspozitura.Repository;
 using BibliotekaEkspozitura.Service;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<EkspozituraDbContext>(options =>
+builder.Services.AddLogging(builder =>
 {
+    builder.AddConsole();
 });
-builder.Services.AddCentralnaHttpClient(x => x.BaseAddress = new Uri("https://host.docker.internal:44393/"));
+string connection = Environment.GetEnvironmentVariable("CONNECTION");
+builder.Services.AddDbContext<EkspozituraDbContext>(options =>
+options.UseNpgsql(builder.Configuration.GetConnectionString(connection)));
+builder.Services.AddCentralnaHttpClient(x => x.BaseAddress = new Uri("https://localhost:44393/"));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
@@ -33,5 +39,12 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<EkspozituraDbContext>();
+    context.Database.Migrate();
+}
 
 app.Run();

@@ -5,7 +5,15 @@ services:
     container_name: "cndb"
     image: postgres
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: bibliotekacn123
+    volumes:
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - biblioteka-network
 
@@ -13,7 +21,15 @@ services:
     container_name: "nsdb"
     image: postgres
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: bibliotekans123
+    volumes:
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - biblioteka-network
 
@@ -21,7 +37,15 @@ services:
     container_name: "bgdb"
     image: postgres
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: bibliotekabg123
+    volumes:
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - biblioteka-network
 
@@ -29,7 +53,15 @@ services:
     container_name: "nidb"
     image: postgres
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: bibliotekani123
+    volumes:
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - biblioteka-network
 
@@ -50,7 +82,9 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
     depends_on:
-      - "cndb"
+      cndb:
+        condition: service_healthy
+    restart: always
     networks:
       - biblioteka-network
 
@@ -64,6 +98,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
+      - CONNECTION=nsdb
     ports:
       - "9010:8080"
       - "9011:8081"
@@ -71,7 +106,8 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
     depends_on:
-      - "nsdb"
+      nsdb:
+        condition: service_healthy
     networks:
       - biblioteka-network
 
@@ -85,6 +121,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
+      - CONNECTION=bgdb
     ports:
       - "9020:8080"
       - "9021:8081"
@@ -92,7 +129,8 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
     depends_on:
-      - "bgdb"
+      bgdb:
+        condition: service_healthy
     networks:
       - biblioteka-network
 
@@ -106,6 +144,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
+      - CONNECTION=nidb
     ports:
       - "9030:8080"
       - "9031:8081"
@@ -113,7 +152,8 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
     depends_on:
-      - "nidb"
+      nidb:
+        condition: service_healthy
     networks:
       - biblioteka-network
 

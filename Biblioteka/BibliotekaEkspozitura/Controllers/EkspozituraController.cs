@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BibliotekaEkspozitura.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/v1")]
     public class EkspozituraController : ControllerBase
     {
         private readonly IMemberService _memberService;
