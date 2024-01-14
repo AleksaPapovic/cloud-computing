@@ -25,18 +25,18 @@ namespace BibliotekaEkspozitura.Service
             return await _centralnaHttp.RegisterMember(registerMember);
         }
 
-        public async Task<RentBookDto?> RentBook(RentDto rentDto)
+        public async Task<RentBookDto?> RentBook(RentDto rent)
         {
-            RentBookDto? rentBookDto = await _centralnaHttp.RentBook(rentDto);
-            RentBook rentBook = _mapper.Map<RentBook>(rentBookDto);
+            RentBookDto? rentBookDto = await _centralnaHttp.RentBook(rent);
+            RentBook rentBook = _mapper.Map<RentBook>(rent);
             await _memberRepository.CreateRent(rentBook);
             return rentBookDto;
         }
 
-        public async Task<RentBookDto?> ReturnBook(RentDto rentDto)
+        public async Task<RentBookDto?> ReturnBook(RentDto rent)
         {
-            RentBookDto? rentBookDto = await _centralnaHttp.ReturnBook(rentDto);
-            RentBook rentBook = _mapper.Map<RentBook>(rentBookDto);
+            RentBookDto? rentBookDto = await _centralnaHttp.ReturnBook(rent);
+            RentBook rentBook = _mapper.Map<RentBook>(rent);
             await _memberRepository.DeleteRent(rentBook);
             return rentBookDto;
         }
