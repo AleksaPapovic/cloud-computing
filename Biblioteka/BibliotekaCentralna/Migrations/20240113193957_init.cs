@@ -26,7 +26,7 @@ namespace BibliotekaCentralna.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "Members",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -38,7 +38,7 @@ namespace BibliotekaCentralna.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.PrimaryKey("PK_Members", x => x.Id);
                 });
         }
 
@@ -49,7 +49,7 @@ namespace BibliotekaCentralna.Migrations
                 name: "Rents");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Members");
         }
     }
 }

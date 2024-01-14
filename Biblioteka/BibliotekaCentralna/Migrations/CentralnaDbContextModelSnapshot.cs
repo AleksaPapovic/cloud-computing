@@ -66,7 +66,7 @@ namespace BibliotekaCentralna.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Members");
                 });
 #pragma warning restore 612, 618
         }

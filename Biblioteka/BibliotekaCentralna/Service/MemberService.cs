@@ -53,7 +53,7 @@ namespace BibliotekaCentralna.Service
         {
             Member? member = await _memberRepository.GetById(memberId);
             if (member == null)
-                throw new DomainException("The does not exists", HttpStatusCode.NotFound);
+                throw new DomainException("The member does not exists", HttpStatusCode.NotFound);
             return member;
         }
     }
