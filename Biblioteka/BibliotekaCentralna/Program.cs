@@ -10,8 +10,9 @@ builder.Services.AddLogging(builder =>
 {
     builder.AddConsole();
 });
+string connection = Environment.GetEnvironmentVariable("CONNECTION");
 builder.Services.AddDbContext<CentralnaDbContext>(options =>
-          options.UseNpgsql(builder.Configuration.GetConnectionString("cndb")));
+          options.UseNpgsql(builder.Configuration.GetConnectionString(connection)));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
