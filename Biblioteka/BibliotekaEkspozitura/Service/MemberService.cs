@@ -1,4 +1,6 @@
-﻿using BibliotekaEkspozitura.Dto;
+﻿using AutoMapper;
+using BibliotekaEkspozitura.Domain;
+using BibliotekaEkspozitura.Dto;
 using BibliotekaEkspozitura.Http;
 using BibliotekaEkspozitura.Repository;
 
@@ -9,28 +11,34 @@ namespace BibliotekaEkspozitura.Service
         private readonly CentralnaHttp _centralnaHttp;
         private readonly IMemberRepository _memberRepository;
         private readonly IHttpClientFactory _httpClientFactory;
-
-        public MemberService(CentralnaHttp centralnaHttp, IMemberRepository memberRepository, IHttpClientFactory httpClientFactory)
+        private readonly IMapper _mapper;
+        public MemberService(CentralnaHttp centralnaHttp, IMemberRepository memberRepository, IHttpClientFactory httpClientFactory, IMapper mapper)
         {
             _centralnaHttp = centralnaHttp;
             _memberRepository = memberRepository;
             _httpClientFactory = httpClientFactory;
+            _mapper = mapper;
         }
 
         public async Task<MemberDto?> RegisterMember(RegisterMemberDto registerMember)
         {
-            MemberDto newMember = await _centralnaHttp.RegisterMember(registerMember);
-            return newMember;
+            return await _centralnaHttp.RegisterMember(registerMember);
         }
 
-        public async Task<RentDto?> RentBook(RentBookDto rentBook)
+        public async Task<RentBookDto?> RentBook(RentDto rentDto)
         {
-            throw new NotImplementedException();
+            RentBookDto? rentBookDto = await _centralnaHttp.RentBook(rentDto);
+            RentBook rentBook = _mapper.Map<RentBook>(rentBookDto);
+            await _memberRepository.CreateRent(rentBook);
+            return rentBookDto;
         }
 
-        public async Task<RentDto?> ReturnBook(ReturnBookDto returnBook)
+        public async Task<RentBookDto?> ReturnBook(RentDto rentDto)
         {
-            throw new NotImplementedException();
+            RentBookDto? rentBookDto = await _centralnaHttp.ReturnBook(rentDto);
+            RentBook rentBook = _mapper.Map<RentBook>(rentBookDto);
+            await _memberRepository.DeleteRent(rentBook);
+            return rentBookDto;
         }
     }
 }

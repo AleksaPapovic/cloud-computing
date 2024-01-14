@@ -20,10 +20,17 @@ namespace BibliotekaEkspozitura.Utils
             if (response != null)
             {
                 result = await response.Content?.ReadAsStringAsync();
-                Console.Write("res "+result.ToString());
-                return System.Text.Json.JsonSerializer.Deserialize<S>(result.ToString() ?? "", SerializerOptions)?? new S();
+                return System.Text.Json.JsonSerializer.Deserialize<S>(result.ToString() ?? "", SerializerOptions) ?? new S();
             }
             return new S();
+        }
+        public static async Task<string> HttpClientResponse(HttpResponseMessage? response)
+        {
+            if (response != null)
+            {
+                return await response.Content?.ReadAsStringAsync();
+            }
+            return "";
         }
     }
 }

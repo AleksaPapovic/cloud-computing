@@ -24,13 +24,13 @@ namespace BibliotekaEkspozitura.Controllers
         }
 
         [HttpPost("rent")]
-        public async Task<ActionResult<RentDto?>> RentBook(RentBookDto rentBook)
+        public async Task<ActionResult<RentBookDto?>> RentBook(RentDto rentBook)
         {
             return Ok(await _memberService.RentBook(rentBook));
         }
 
         [HttpPost("return")]
-        public async Task<ActionResult<RentDto?>> ReturnBook(ReturnBookDto returnBook)
+        public async Task<ActionResult<RentBookDto?>> ReturnBook(RentDto returnBook)
         {
             return Ok(await _memberService.ReturnBook(returnBook));
         }

@@ -5,7 +5,8 @@ namespace BibliotekaCentralna.Service
 {
     public interface IMemberService
     {
-        Task<RentDto?> RentBook(RentBookDto rentBook);
         Task<MemberDto?> RegisterMember(RegisterMemberDto registerMember);
+        Task<RentBookDto?> RentBook(RentBookDto rentBook);
+        Task<RentBookDto?> ReturnBook(RentBookDto rentBook);
     }
 }

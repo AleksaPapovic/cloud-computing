@@ -1,7 +1,9 @@
-﻿using BibliotekaCentralna.Dto;
+﻿using BibliotekaCentralna.Domain;
+using BibliotekaCentralna.Dto;
 using BibliotekaCentralna.Service;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Net;
 
 namespace BibliotekaCentralna.Controllers
 {
@@ -21,15 +23,19 @@ namespace BibliotekaCentralna.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<MemberDto?>> RegisterMember(RegisterMemberDto registerMember)
         {
-            Console.WriteLine("writeline centar");
-            Console.WriteLine("writeline centar"+ registerMember.Firstname);
             return Ok(await _memberService.RegisterMember(registerMember));
         }
 
         [HttpPost("rent-book")]
-        public async Task<ActionResult<RentDto?>> RentBook(RentBookDto rentBook)
+        public async Task<ActionResult<RentBookDto?>> RentBook(RentBookDto rentBook)
         {
             return Ok(await _memberService.RentBook(rentBook));
+        }
+
+        [HttpPost("return-book")]
+        public async Task<ActionResult<RentBookDto?>> ReturnBook(RentBookDto rentBook)
+        {
+            return Ok(await _memberService.ReturnBook(rentBook));
         }
     }
 }

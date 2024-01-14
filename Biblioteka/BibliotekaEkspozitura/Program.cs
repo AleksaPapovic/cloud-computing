@@ -1,5 +1,6 @@
 using BibliotekaEkspozitora.Domain;
 using BibliotekaEkspozitura.Http;
+using BibliotekaEkspozitura.Middleware;
 using BibliotekaEkspozitura.Repository;
 using BibliotekaEkspozitura.Service;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IMemberService, MemberService>();
-
+builder.Services.AddTransient<ExceptionMiddleware>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -37,6 +38,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapControllers();
 
