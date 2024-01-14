@@ -10,13 +10,11 @@ namespace BibliotekaEkspozitura.Service
     {
         private readonly CentralnaHttp _centralnaHttp;
         private readonly IMemberRepository _memberRepository;
-        private readonly IHttpClientFactory _httpClientFactory;
         private readonly IMapper _mapper;
-        public MemberService(CentralnaHttp centralnaHttp, IMemberRepository memberRepository, IHttpClientFactory httpClientFactory, IMapper mapper)
+        public MemberService(CentralnaHttp centralnaHttp, IMemberRepository memberRepository, IMapper mapper)
         {
             _centralnaHttp = centralnaHttp;
             _memberRepository = memberRepository;
-            _httpClientFactory = httpClientFactory;
             _mapper = mapper;
         }
 

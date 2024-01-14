@@ -30,7 +30,12 @@ namespace BibliotekaCentralna.Repository
 
         public async Task<int> GetRentCount(int memberId)
         {
-            return (await _centralnaDb.Rents.FirstOrDefaultAsync(member => member.Id == memberId)).Id;
+            Rent? rent = await _centralnaDb.Rents.FirstOrDefaultAsync(member => member.Id == memberId);
+            if(rent != null)
+            {
+                return rent.Count;
+            }
+            return 0;
         }
 
         public async Task<int> CreateRent(int memberId)

@@ -14,7 +14,7 @@ namespace BibliotekaEkspozitura.Repository
 
         public async Task<RentBook> CreateRent(RentBook rentBook)
         {
-            rentBook.RentDate = DateTime.Now;
+            rentBook.RentDate = DateTime.UtcNow;
             await _ekspozituraDb.RentBooks.AddAsync(rentBook);
             await _ekspozituraDb.SaveChangesAsync();
             return rentBook;
@@ -25,7 +25,7 @@ namespace BibliotekaEkspozitura.Repository
             RentBook oldRent = await _ekspozituraDb.RentBooks.FirstOrDefaultAsync(rb => rb.Id == rentBook.Id && rb.ISBN.Equals(rentBook.ISBN));
             if (oldRent != null)
             {
-                oldRent.ReturnDate = DateTime.Now;
+                oldRent.ReturnDate = DateTime.UtcNow;
                 _ekspozituraDb.RentBooks.Update(oldRent);
                 await _ekspozituraDb.SaveChangesAsync();
             }

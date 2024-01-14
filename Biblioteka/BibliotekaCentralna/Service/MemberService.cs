@@ -35,17 +35,17 @@ namespace BibliotekaCentralna.Service
             int count = await _memberRepository.GetRentCount(rentBook.MemberId);
             if (count < 3)
             {
-                await _memberRepository.CreateRent(rentBook.MemberId);
+                rentBook.Count = await _memberRepository.CreateRent(rentBook.MemberId);
                 return rentBook;
             }
             else
-                throw new DomainException("The member already exists with same JMBG.", HttpStatusCode.BadRequest);
+                throw new DomainException("The member already rented three books", HttpStatusCode.BadRequest);
         }
 
         public async Task<RentBookDto?> ReturnBook(RentBookDto rentBook)
         {
                 await CheckUser(rentBook.MemberId);
-                await _memberRepository.DeleteRent(rentBook.MemberId);
+                rentBook.Count = await _memberRepository.DeleteRent(rentBook.MemberId);
                 return rentBook;
         }
 

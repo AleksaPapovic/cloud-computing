@@ -24,22 +24,6 @@ namespace BibliotekaEkspozitura.Http
             return await HttpUtils.HttpClientResponse<MemberDto>(response);
         }
 
-        private static async Task CheckHttpException(HttpResponseMessage response)
-        {
-            if (response.StatusCode == HttpStatusCode.InternalServerError)
-            {
-                throw new Exception(await HttpUtils.HttpClientResponse(response));
-            }
-            if (response.StatusCode == HttpStatusCode.NotFound)
-            {
-                throw new DomainException(await HttpUtils.HttpClientResponse(response), HttpStatusCode.NotFound);
-            }
-            if (response.StatusCode == HttpStatusCode.BadRequest)
-            {
-                throw new DomainException(await HttpUtils.HttpClientResponse(response), HttpStatusCode.BadRequest);
-            }
-        }
-
         public async Task<RentBookDto> RentBook(RentDto rent)
         {
             RentBookDto rentBook = new() { MemberId = rent.MemberId };
@@ -54,6 +38,22 @@ namespace BibliotekaEkspozitura.Http
             HttpResponseMessage response = await _httpClient.PostAsync($"/api/v1/return-book", HttpUtils.HttpClientRequest(rentBook));
             await CheckHttpException(response);
             return await HttpUtils.HttpClientResponse<RentBookDto>(response);
+        }
+
+        private static async Task CheckHttpException(HttpResponseMessage response)
+        {
+            if (response.StatusCode == HttpStatusCode.InternalServerError)
+            {
+                throw new Exception(await HttpUtils.HttpClientResponse(response));
+            }
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                throw new DomainException(await HttpUtils.HttpClientResponse(response), HttpStatusCode.NotFound);
+            }
+            if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                throw new DomainException(await HttpUtils.HttpClientResponse(response), HttpStatusCode.BadRequest);
+            }
         }
     }
 }

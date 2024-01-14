@@ -31,7 +31,7 @@ namespace BibliotekaEkspozitura.Middleware
             {
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-
+                Console.WriteLine("trace" + exception.StackTrace);
                 if (exception.InnerException != null)
                     await context.Response.WriteAsync(JsonConvert.SerializeObject(exception.InnerException.Message));
                 else
