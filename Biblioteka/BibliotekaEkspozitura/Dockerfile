@@ -9,15 +9,15 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["BibliotekaEkspozitura/BibliotekaEkspozitura.csproj", "BibliotekaEkspozitura/"]
+COPY ["./BibliotekaEkspozitura.csproj", "BibliotekaEkspozitura/BibliotekaEkspozitura.csproj"]
 RUN dotnet restore "./BibliotekaEkspozitura/./BibliotekaEkspozitura.csproj"
 COPY . .
 WORKDIR "/src/BibliotekaEkspozitura"
-RUN dotnet build "./BibliotekaEkspozitura.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "BibliotekaEkspozitura.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./BibliotekaEkspozitura.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "BibliotekaEkspozitura.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

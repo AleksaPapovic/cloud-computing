@@ -1,39 +1,30 @@
-name: Build and Publish Docker
-
+name: Docker Image CI
 on:
   push:
     branches:
       - main
-
 jobs:
-  build-and-push:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Check Out Repo
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Log in to DockerHub
-        uses: docker/login-action@v1
+      - name: Log into Docker Hub
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Build and Push Docker Image for BibliotekaCentralna
+      - name: Push the BibliotekaCentralna image to Docker Hub
         uses: docker/build-push-action@v2
         with:
-          context: ./BibliotekaCentralna
-          file: ./BibliotekaCentralna/Dockerfile
+          context: ./Biblioteka/BibliotekaCentralna/
           push: true
-          tags: aleksapapovic/biblioteka_cn:cc
+          tags: aleksapapovic/biblioteka_cn
 
-      - name: Build and Push Docker Image for BibliotekaEkspozitura
+      - name: Push the BibliotekaEkspozitura image to Docker Hub
         uses: docker/build-push-action@v2
         with:
-          context: ./BibliotekaEkspozitura
-          file: ./BibliotekaEkspozitura/Dockerfile
+          context: ./Biblioteka/BibliotekaEkspozitura/
           push: true
-          tags: aleksapapovic/biblioteka_ek:cc
+          tags: aleksapapovic/biblioteka_ek
