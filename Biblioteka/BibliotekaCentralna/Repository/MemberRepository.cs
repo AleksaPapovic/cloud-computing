@@ -67,6 +67,7 @@ namespace BibliotekaCentralna.Repository
                 rent.Count -= 1;
                 _centralnaDb.Rents.Update(rent);
                 await _centralnaDb.SaveChangesAsync();
+                return rent.Count;
             }
             return 0;
         }
