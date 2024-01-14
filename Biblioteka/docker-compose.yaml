@@ -67,10 +67,7 @@ services:
 
   biblioteka_cn:
     container_name: "biblioteka_cn"
-    image: "centralna"
-    build:
-      context: .
-      dockerfile: BibliotekaCentralna/Dockerfile
+    image: aleksapapovic/biblioteka_cn:latest
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
@@ -90,10 +87,7 @@ services:
 
   biblioteka_ns:
     container_name: "biblioteka_ns"
-    image: "ekspozituranovisad"
-    build:
-      context: .
-      dockerfile: BibliotekaEkspozitura/Dockerfile
+    image: aleksapapovic/biblioteka_ek:latest
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
@@ -108,15 +102,13 @@ services:
     depends_on:
       nsdb:
         condition: service_healthy
+    restart: always
     networks:
       - biblioteka-network
 
   biblioteka_bg:
     container_name: "biblioteka_bg"
-    image: "ekspoziturabg"
-    build:
-      context: .
-      dockerfile: BibliotekaEkspozitura/Dockerfile
+    image: aleksapapovic/biblioteka_ek:latest
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
@@ -131,15 +123,13 @@ services:
     depends_on:
       bgdb:
         condition: service_healthy
+    restart: always
     networks:
       - biblioteka-network
 
   biblioteka_ni:
     container_name: "biblioteka_ni"
-    image: "ekspozituranis"
-    build:
-      context: .
-      dockerfile: BibliotekaEkspozitura/Dockerfile
+    image: aleksapapovic/biblioteka_ek:latest
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
@@ -154,6 +144,7 @@ services:
     depends_on:
       nidb:
         condition: service_healthy
+    restart: always
     networks:
       - biblioteka-network
 
