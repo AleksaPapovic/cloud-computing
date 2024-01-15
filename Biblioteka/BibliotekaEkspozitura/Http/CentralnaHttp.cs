@@ -15,6 +15,9 @@ namespace BibliotekaEkspozitura.Http
             clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
             _httpClient = new HttpClient(clientHandler);
             _httpClient.BaseAddress = new Uri("https://biblioteka_cn:8081");
+            string? connection = Environment.GetEnvironmentVariable("CLIENT");
+            if(connection != null && connection != "")
+            _httpClient.BaseAddress = new Uri(connection);
         }
 
         public async Task<MemberDto> RegisterMember(RegisterMemberDto registerMember)
