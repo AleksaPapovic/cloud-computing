@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: biblioteka-cn-deployment
+  name: biblioteka-ni-deployment
 spec:
   selector:
     matchLabels:
-      app: biblioteka-cn-deployment
+      app: biblioteka-ni-deployment
   replicas: 1
   template:
     metadata:
       labels:
-        app: biblioteka-cn-deployment
+        app: biblioteka-ni-deployment
     spec:
       containers:
         - name: mdb
@@ -19,17 +19,17 @@ spec:
             - name: POSTGRES_USER
               value: "postgres"
             - name: POSTGRES_PASSWORD
-              value: "bibliotekacn123"
+              value: "bibliotekani123"
           ports:
             - containerPort: 5432
           volumeMounts:
             - name: init-script
               mountPath: /docker-entrypoint-initdb.d
-            - name: cndb-storage
+            - name: nidb-storage
               mountPath: /var/lib/postgresql/data
               subPath: postgres
-        - name: biblioteka-cn
-          image: aleksapapovic/biblioteka_cn:latest
+        - name: biblioteka-ni
+          image: aleksapapovic/biblioteka_ek:latest
           imagePullPolicy: Always
           env:
             - name: ASPNETCORE_ENVIRONMENT
@@ -39,7 +39,7 @@ spec:
             # - name: ASPNETCORE_HTTPS_PORTS
             #   value: "8081"
             - name: CONNECTION
-              value: "cndb-k8"
+              value: "nidb-k8"
           ports:
             - containerPort: 8080
             # - containerPort: 8081
@@ -52,12 +52,12 @@ spec:
           #     readOnly: true
 
       volumes:
-        - name: cndb-storage
+        - name: nidb-storage
           persistentVolumeClaim:
-            claimName: cndb-pvc
+            claimName: nidb-pvc
         - name: init-script
           configMap:
-            name: cndb-init-script
+            name: nidb-init-script
         # - name: user-secrets
         #   hostPath:
         #     path: C:/Users/papov/AppData/Roaming/Microsoft/UserSecrets
@@ -68,18 +68,18 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: cndb
+  name: nidb
 spec:
   type: ClusterIP
   selector:
-    component: biblioteka-cn-deployment
+    component: biblioteka-ni-deployment
   ports:
     - name: http
       port: 8080
-      targetPort: 9000
+      targetPort: 9030
     # - name: https
     #   port: 8081
-    #   targetPort: 9001
+    #   targetPort: 9031
     - name: db
       port: 5432
       targetPort: 5432
@@ -87,6 +87,6 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: cndb-init-script
+  name: nidb-init-script
 data:
   init-db.sh: "set -e; psql -v ON_ERROR_STOP=1 <<-EOSQL    CREATE DATABASE mdb;EOSQL"
